@@ -1,8 +1,8 @@
 <?php
-//ŠÂ‹«Ø‚è•ª‚¯’è”ƒZƒbƒg“Ç‚Ýž‚Ý
+//ç’°å¢ƒåˆ‡ã‚Šåˆ†ã‘å®šæ•°ã‚»ãƒƒãƒˆèª­ã¿è¾¼ã¿
 require_once('environment.php');
   
-  
+//Change!! git test 
   
   
   
