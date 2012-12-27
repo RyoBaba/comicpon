@@ -1,12 +1,9 @@
 <?php
 //環境切り分け定数セット読み込み
 require_once('environment.php');
-  
-//Change!! git test 
 
-//Chenge !! git test 2
+require_once('rakuten_config.php');
+require_once('amazon_config.php');
 
-//Change !! git test 3
 
-  
 ?>

@@ -34,17 +34,14 @@ class RakutenBookSearch extends AppModel {
         App::uses('Xml', 'Utility');
         $HttpSocket = new HttpSocket();
         
-        $access_key_id = RAKUTEN_ACCESS_KEY_ID;  //楽天Webサービス登録時に発行されるアクセスキー
-        $secret_access_key = RAKUTEN_SECRET_ACCESS_KEY;  //楽天Webサービス登録時に発行されるアクセスキー
-        
         // 楽天ブックス書籍検索API2
         // パラメタの設定
         $baseurl = 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20121128';
         $params = array();
         
         //[1]必須パラメタ
-        $params['applicationId']  = '1040532859624711114'; //アプリケーションID
-        $params['affiliateId'] = '10839e0a.a54f997f.10839e0b.5e874c00'; //アフィリエイトID
+        $params['applicationId']  = RAKUTEN_APP_ID; //アプリケーションID
+        $params['affiliateId'] = RAKUTEN_AFFILI_ID; //アフィリエイトID
         $params['format']        = 'json'; //受信データ形式
         
         //[2]サービス固有パラメタ
@@ -52,7 +49,6 @@ class RakutenBookSearch extends AppModel {
         if(isset($search_values['genreld'])) $params['booksGenreId'] = urlencode($search_values['genreld']); //書籍ジャンルコード000（任意）
         if(isset($search_values['isbn'])) {
         	$params['isbnjan'] = urlencode($search_values['isbn']); //ISBN(japan)
-        	//ハイフンがあれば除去しておく
         	$params['isbnjan'] = str_replace("-", "", $params['isbnjan']);
         }
         $params['carrier'] = ($env=='PC') ? "0" : "1";
@@ -77,7 +73,6 @@ class RakutenBookSearch extends AppModel {
 			$i++;
 		}
 
-        // リクエストURL
         $url = $baseurl.$query;
 
         $data = $HttpSocket->get($url);

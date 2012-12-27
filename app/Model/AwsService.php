@@ -20,18 +20,17 @@ class AwsService extends AppModel {
         App::uses('Xml', 'Utility');
         $HttpSocket = new HttpSocket();
         
-        $access_key_id = 'AKIAJ7PIXAJ77UOVXKTA';
-        $secret_access_key = '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';
+        $access_key_id = AMAZON_ACCESS_KEY_ID;
+        $secret_access_key = AMAZON_SECRET_ACCESS_KEY;
         
         // Amazon Web Service 接続API
-        // パラメタの設定
         $baseurl = 'http://ecs.amazonaws.jp/onca/xml';
         $params = array();
         $params['Service']        = 'AWSECommerceService';
         $params['AWSAccessKeyId'] = $access_key_id;
         $params['Version']        = '2009-03-31';
         
-        //ItemSearch例
+        //ItemSearchﾂｗ
         //$params['Operation']      = 'ItemSearch';
         //$params['SearchIndex']    = 'Books';
         
@@ -39,9 +38,9 @@ class AwsService extends AppModel {
         
         $params['Operation'] = 'ItemLookup';
         $params['ItemId'] = $ItemId;
-        $params['IdType']       = $IdType;     //
+        $params['IdType']       = $IdType;
         
-        $params['AssociateTag']       = 'ryosugisaku-22';
+        $params['AssociateTag']       = AMAZON_ASSOCIATE_ID;
         $params['ResponseGroup'] = "OfferFull";
         $params['Condition'] = "All";
         $params['MerchantId'] = "All";
@@ -49,8 +48,6 @@ class AwsService extends AppModel {
         // Timestamp GMT標準時間（形式：YYYY-MM-DDTH:i:sZ)
         // 形式を指定してGMT標準時刻を取得
         $params['Timestamp'] = gmdate('Y-m-d\TH:i:s\Z');
-        
-        // リクエストパラメタをキーの昇順にソートしておく
         ksort($params);
         
         // canonical string
@@ -60,10 +57,6 @@ class AwsService extends AppModel {
         }
         $canonical_string = substr($canonical_string, 1);
         
-        // ¼ðì¬µÜ·
-        // - KèÌ¶ñtH[}bgðì¬
-        // - HMAC-SHA256 ðvZ
-        // - BASE64 GR[h
         $parsed_url = parse_url($baseurl);
         $string_to_sign = "GET\n{$parsed_url['host']}\n{$parsed_url['path']}\n{$canonical_string}";
         $signature = base64_encode(hash_hmac('sha256', $string_to_sign, $secret_access_key, true));
@@ -77,7 +70,6 @@ class AwsService extends AppModel {
         	return false;
         }
         
-        pr($xml);
         return $xml;
 	
 	}

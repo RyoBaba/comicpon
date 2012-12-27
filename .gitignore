@@ -163,9 +163,10 @@ pip-log.txt
 .DS_Store
 
 
-# 設定ファイル
+# Application config
 database.php
 email.php
 environment.php
 rakuten_config.php
+amazon_config.php
 core.php
