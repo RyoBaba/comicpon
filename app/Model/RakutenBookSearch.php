@@ -14,17 +14,18 @@ class RakutenBookSearch extends AppModel {
 	 * @param $search_values  検索キーワード（キー名と値のセット　連想配列）
 	 *          *現在有効としているキー
 	 *           keyword  検索キーワード
-	 *           genreld  書籍ジャンルコード ※あまり使わないかも？
+	 *           genreid  書籍ジャンルコード ※あまり使わないかも？
 	 *           isbn     ISBNコード(JAN)
 	 * @param $env アクセス環境を指定。(PC,SP)デフォルトはPC向け情報とする
+	 * @param $first 第１巻限定フラグ（タイトルに「１巻」等のキーワードを含むもののみ取得する　デフォルトはtrue）
 	 * @return パラメタ異常、または検索結果が０件の場合FALSEを返す
 	 *         正常に取得できた場合、楽天より取得したデータのフルセット（JSON形式）
 	 */
-	public function getItem($search_values, $env='PC'){
+	public function getItem($search_values, $env='PC', $first=true){
 		
 		//[0]パラメタ検査
 		if( !array_key_exists('keyword', $search_values) &&
-		    !array_key_exists('genreld', $search_values) &&
+		    !array_key_exists('genreid', $search_values) &&
 		    !array_key_exists('isbn', $search_values) ){
 			return false;
 		}
@@ -40,32 +41,21 @@ class RakutenBookSearch extends AppModel {
         $params = array();
         
         //[1]必須パラメタ
-        /*
-        $params['applicationId']  = RAKUTEN_APP_ID; //アプリケーションID
-        $params['affiliateId'] = RAKUTEN_AFFILI_ID; //アフィリエイトID
-        $params['format']        = 'json'; //受信データ形式
-        */
         $params = $this->_getCommonParam();
         
         //[2]サービス固有パラメタ
         if(isset($search_values['keyword'])) $params['keyword'] = urlencode($search_values['keyword']);  //検索キーワード（任意）
-        if(isset($search_values['genreld'])) $params['booksGenreId'] = urlencode($search_values['genreld']); //書籍ジャンルコード000（任意）
+        if(isset($search_values['genreid'])) $params['booksGenreId'] = urlencode($search_values['genreid']);
         if(isset($search_values['isbn'])) {
         	$params['isbnjan'] = urlencode($search_values['isbn']); //ISBN(japan)
         	$params['isbnjan'] = str_replace("-", "", $params['isbnjan']);
         }
         $params['carrier'] = ($env=='PC') ? "0" : "1";
-        
+        $params['title'] = urlencode($this->_get_str_like_first());
+        $params['sort'] = urlencode("reviewCount");
+        $params['size'] = 9; //comic
+  
         ksort($params);
-        
-        // canonical string
-        /*
-        $canonical_string = '';
-        foreach ($params as $k => $v) {
-            $canonical_string .= '&'.$this->_urlencode_rfc3986($k).'='.$this->_urlencode_rfc3986($v);
-        }
-        $canonical_string = substr($canonical_string, 1);
-        */
         
 		//[3]パラメタをクエリ文字列に変換
 		$query = "?"; $i=0;
@@ -77,16 +67,7 @@ class RakutenBookSearch extends AppModel {
 
         $url = $baseurl.$query;
         $data = $HttpSocket->get($url);
-//        if(FALSE === $data = Xml::toArray( Xml::build($url) ) ){
-//        	return false;
-//        }
-//        if(FALSE === $data = Xml::build($url)){
-//       	$this->log('CANT Find Xml', LOG_DEBUG);
-//        } else {
-//        $this->log("chk2");
-//        	$data = Xml::toArray($data);
-//        }
-        //$data = json_decode($res);
+
         return $data;
 	
 	}
@@ -94,6 +75,23 @@ class RakutenBookSearch extends AppModel {
     private function _urlencode_rfc3986($str)
     {
         return str_replace('%7E', '~', rawurlencode($str));
+    }
+    // 第１巻に類する文字列を半角空白区切りで取得する
+    private function _get_str_like_first(){
+    	
+    	$strings = array();
+		$fp = fopen(ROOT . DS . APP_DIR . DS . 'Model/Datasource/first_str.txt', "r"); 	
+		if ($fp) {
+		    while (($buffer = fgets($fp, 4096)) !== false) {
+		        $strings[] = $buffer;
+		    }
+		    if (!feof($fp)) {
+		        echo "Error: unexpected fgets() fail\n";
+		    }
+		    fclose($fp);
+		}
+		$string = implode(" ", $strings);
+		return $string;
     }
     
     //楽天API共通パラメタ取得

@@ -1,5 +1,14 @@
 <?php
 	$genre_search_action = Router::url(array('controller'=>'ComicRecomends', 'action'=>'book_search_by_genre'));
+
+	//外部スクリプトファイルの場合
+	//$this->Html->script('jquery.1.8.3', array('inline'=>false));
+
+	$this->start('script');
+	echo $this->element('ComicRecomends_genre_search');
+	$this->end();
+
+
 ?>
 <h2>ジャンル検索</h2>
 
@@ -24,7 +33,9 @@
 		    ."<a href='" . $genre_search_action . "/" . $data['child']['booksGenreId'] . "'>詳しい分類</a>"
 		    ."]</span>"
 		    ."</td>";
-		echo "<td>" . "<input type='button' value='検索'>" . "</td>";
+		echo "<td>" 
+			. "<input data-genre-id='" . $data['child']['booksGenreId'] . "' type='button' value='検索' class='bookSearchByGenre'>" 
+			. "</td>";
 		echo "</tr>";
 	}
 ?>

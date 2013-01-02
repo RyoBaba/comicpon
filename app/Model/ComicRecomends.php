@@ -14,7 +14,7 @@ class ComicRecomends extends AppModel {
 	 * 2.1でISBN検索の時のみ書籍データが取得できなかった場合、楽天APIに接続し、書籍データ取得
 	 *  2-1. 2で書籍データを取得できた場合、以降同書籍のデータはcpt_comicsから取得できるようマスタ登録
 	 * @param $search_key  書籍検索用キー値
-	 * @param $search_ype  書籍検索の種類（ISBN/TITLE/AUTHOR)
+	 * @param $search_ype  書籍検索の種類（ISBN/TITLE/AUTHOR/GENREID)
 	 */
 	public function findBooks($ItemId, $IdType='ISBN'){
 		
@@ -66,6 +66,9 @@ class ComicRecomends extends AppModel {
 		return $data;
 			
 	}
+	
+	
+	
 	//(SUB) 楽天APIデータ→cpt_comicsセーブ用に変換
 	private function _set_save_data_rakuToApp($item){
 		
@@ -110,5 +113,19 @@ class ComicRecomends extends AppModel {
 		//$RakutenBookSearch->getGenreData("001001003"); //青年
 		$genre_data = $RakutenBookSearch->getGenreData($genre_id); //青年
 		return $genre_data;
+	}
+	
+	/**
+	 * ジャンルIDを受け取り、該当する書籍リストを取得する
+	 */
+	public function getBookListByGenreId ($genre_id) {
+		
+		$RakutenBookSearch = ClassRegistry::init('RakutenBookSearch');
+		
+		$params = array('genreid'=>$genre_id);
+		$item_datas = $RakutenBookSearch->getItem($params);
+		
+		return $item_datas;
+				
 	}
 }

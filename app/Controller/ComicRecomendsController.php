@@ -68,6 +68,21 @@ class ComicRecomendsController extends AppController {
 
 	}
 
+/**
+ * ジャンルIDから該当する書籍情報のリストを取得する
+ */
+	public function book_list_by_genre( $genre_id ) {
+		$item_datas = array();
+		$RakutenBookSearch = ClassRegistry::init('RakutenBookSearch');
+		if( FALSE === $RakutenBookSearch->chk_genre_id($genre_id) ){
+			$this->Session->setFlash(__('ジャンル指定が正しくありません'));
+		} else {
+			$item_datas_json = $this->ComicRecomends->getBookListByGenreId($genre_id);
+			$item_datas = json_decode($item_datas_json, true);
+		}
+		$this->set("item_datas", $item_datas);
+	}
+
 
 /**
  * view method
