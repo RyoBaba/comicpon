@@ -53,6 +53,7 @@ class ComicRecomends extends AppModel {
 							$saveData = $CptComic->save($saveData);
 							//cpt_comicのレイアウトに展開する
 							$data[$i] = $saveData;
+							
 							$i++;
 						}
 						
@@ -87,10 +88,27 @@ class ComicRecomends extends AppModel {
 		$saveData['sales_date'] = $item['salesDate'];
 		$saveData['afili_raku'] = $item['affiliateUrl'];
 		$saveData['afili_ama'] = "";
-		$saveData['item_image'] = $item['largeImageUrl'];
+		//$saveData['item_image'] = $item['largeImageUrl'];
 
+		$image_bin = file_get_contents($item['largeImageUrl']);
+		$file_name = substr(strrchr($item['largeImageUrl'], "/"), 1);
+		$file_name = str_replace(strrchr($file_name, "?"), "", $file_name);
+		file_put_contents(BOOK_IMAGES_PATH.DS.$file_name, $image_bin);
+		$saveData['item_image'] = $file_name;
+		
 		return $saveData;
 
 	}
-
+	
+	/**
+	 * ジャンル検索
+	 */
+	public function getGenre($genre_id='001'){
+		$RakutenBookSearch = ClassRegistry::init('RakutenBookSearch');
+		//$RakutenBookSearch->getGenreData("001001001"); //少年
+		//$RakutenBookSearch->getGenreData("001001002"); //少女
+		//$RakutenBookSearch->getGenreData("001001003"); //青年
+		$genre_data = $RakutenBookSearch->getGenreData($genre_id); //青年
+		return $genre_data;
+	}
 }

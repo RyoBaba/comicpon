@@ -23,22 +23,15 @@
 		
 		$item = $item['CptComic'];
 		
-		//書籍タイトル
 		$item_title = $item['book_title'];
-		//著者名
 		$item_author = $item['author'];
-		//発行日
 		$item_sales_date = $item['sales_date'];
-		//巻数
 		$item_vol = "※取得方法検討中";
-		//出版社
 		$item_publisher = $item['publisher'];
-		//価格
 		$item_price = $item['price'];
-		//商品画URL
-		$item_image_url = $item['item_image'];
-		//楽天アフィリエイトURL
-		$item_affiliate_rakuten_url = $item;
+		$item_image_url = $this->webroot . BOOK_IMAGE_DIR_NAME . DS . $item['item_image'];
+		$item_affiliate_rakuten_url = $item['afili_raku'];
+		
 		echo "<h3>{$item_title}</h3>";
 		echo "<img src='{$item_image_url}' width='200' alt='{$item_title}表紙画像'>";
 		echo "<table>";

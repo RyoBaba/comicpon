@@ -31,7 +31,7 @@ class RakutenBookSearch extends AppModel {
 		
         //HttpSocket & Xml
         App::uses('HttpSocket', 'Network/Http');
-        App::uses('Xml', 'Utility');
+        //App::uses('Xml', 'Utility');
         $HttpSocket = new HttpSocket();
         
         // 楽天ブックス書籍検索API2
@@ -40,9 +40,12 @@ class RakutenBookSearch extends AppModel {
         $params = array();
         
         //[1]必須パラメタ
+        /*
         $params['applicationId']  = RAKUTEN_APP_ID; //アプリケーションID
         $params['affiliateId'] = RAKUTEN_AFFILI_ID; //アフィリエイトID
         $params['format']        = 'json'; //受信データ形式
+        */
+        $params = $this->_getCommonParam();
         
         //[2]サービス固有パラメタ
         if(isset($search_values['keyword'])) $params['keyword'] = urlencode($search_values['keyword']);  //検索キーワード（任意）
@@ -53,7 +56,6 @@ class RakutenBookSearch extends AppModel {
         }
         $params['carrier'] = ($env=='PC') ? "0" : "1";
         
-        // ﾂャ潟Nエストパラメタをキーの昇順にソートしておく
         ksort($params);
         
         // canonical string
@@ -74,7 +76,6 @@ class RakutenBookSearch extends AppModel {
 		}
 
         $url = $baseurl.$query;
-
         $data = $HttpSocket->get($url);
 //        if(FALSE === $data = Xml::toArray( Xml::build($url) ) ){
 //        	return false;
@@ -94,6 +95,60 @@ class RakutenBookSearch extends AppModel {
     {
         return str_replace('%7E', '~', rawurlencode($str));
     }
-
+    
+    //楽天API共通パラメタ取得
+    private function _getCommonParam(){
+    	$params = array();
+        $params['applicationId']  = RAKUTEN_APP_ID; //アプリケーションID
+        $params['affiliateId'] = RAKUTEN_AFFILI_ID; //アフィリエイトID
+        $params['format']        = 'json'; //受信データ形式
+		return $params;    	
+    }
+    
+    /**
+     * 楽天ジャンル検索
+     */
+	public function getGenreData($genre_id){
+		
+		$baseurl = 'https://app.rakuten.co.jp/services/api/BooksGenre/Search/20121128';
+		$params = array();
+		$params = $this->_getCommonParam();
+		$params['booksGenreId'] = $genre_id; //ジャンルルートID
+		$query = "?"; $i=0;
+		foreach($params as $key => $value){
+			if($i>0) $query.="&";
+			$query.=$key."=".$value;
+			$i++;
+		}
+		App::uses('HttpSocket', 'Network/Http');
+        //App::uses('Xml', 'Utility');
+        $HttpSocket = new HttpSocket();
+        $url = $baseurl.$query;
+        $data = $HttpSocket->get($url);
+		return json_decode($data, true);
+		
+	}
+	
+	/**
+	 * ジャンルIDの妥当性をチェックする
+	 *  [1] ジャンルIDが６桁未満はNG（書籍以外の可能性がある）
+	 *  [2] ジャンルIDが６桁の場合「001001＝ブック／漫画（コミック）」以外はエラー
+	 *  
+	 */
+	public function chk_genre_id($genre_id) {
+		
+		if( empty($genre_id) ){
+			return false;
+		} else {
+			if( strlen($genre_id) < 6 ){
+				return false;
+			} else {
+				if( strlen($genre_id)==6 && $genre_id!='001001' ){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 }
