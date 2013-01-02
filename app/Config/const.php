@@ -5,5 +5,6 @@ require_once('environment.php');
 require_once('rakuten_config.php');
 require_once('amazon_config.php');
 
+//HOGE
 
 ?>
