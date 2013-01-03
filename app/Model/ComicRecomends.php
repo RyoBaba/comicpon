@@ -128,4 +128,18 @@ class ComicRecomends extends AppModel {
 		return $item_datas;
 				
 	}
+	
+	/**
+	 * 楽天APIより複数条件で情報取得する
+	 */
+	public function getBookList ($params) {
+		
+		$RakutenBookSearch = ClassRegistry::init('RakutenBookSearch');
+		if(FALSE === $item_datas_json = $RakutenBookSearch->getItem($params)){
+			return false;
+		}
+		
+		return $item_datas_json;
+		
+	}
 }

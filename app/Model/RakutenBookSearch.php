@@ -9,7 +9,7 @@ class RakutenBookSearch extends AppModel {
 	public $useTable = false;
 	
 	/**
-	 * 楽天ブックス書籍検索API２サービスでアイテム情報取得
+	 * 楽天ブックス書籍検索API２サービスで単品アイテム情報取得
 	 * [API仕様]https://webservice.rakuten.co.jp/api/bookstotalsearch2/
 	 * @param $search_values  検索キーワード（キー名と値のセット　連想配列）
 	 *          *現在有効としているキー
@@ -17,12 +17,12 @@ class RakutenBookSearch extends AppModel {
 	 *           genreid  書籍ジャンルコード ※あまり使わないかも？
 	 *           isbn     ISBNコード(JAN)
 	 * @param $env アクセス環境を指定。(PC,SP)デフォルトはPC向け情報とする
-	 * @param $first 第１巻限定フラグ（タイトルに「１巻」等のキーワードを含むもののみ取得する　デフォルトはtrue）
+	 * @param $first 第１巻限定フラグ（タイトルに「１巻」等のキーワードを含むもののみ取得する　デフォルトはtrue）//※完全ではない
 	 * @return パラメタ異常、または検索結果が０件の場合FALSEを返す
 	 *         正常に取得できた場合、楽天より取得したデータのフルセット（JSON形式）
 	 */
-	public function getItem($search_values, $env='PC', $first=true){
-		
+	public function getItem($search_values, $env='PC', $first=false){
+
 		//[0]パラメタ検査
 		if( !array_key_exists('keyword', $search_values) &&
 		    !array_key_exists('genreid', $search_values) &&
@@ -44,17 +44,32 @@ class RakutenBookSearch extends AppModel {
         $params = $this->_getCommonParam();
         
         //[2]サービス固有パラメタ
-        if(isset($search_values['keyword'])) $params['keyword'] = urlencode($search_values['keyword']);  //検索キーワード（任意）
-        if(isset($search_values['genreid'])) $params['booksGenreId'] = urlencode($search_values['genreid']);
+        $params['keyword'] = "";
+        if(isset($search_values['keyword'])) $params['keyword'] .= $search_values['keyword'];
+        if($first) $params['keyword'] .= " " . $this->_get_str_like_first();
+        if($params['keyword']!=""){
+        	$params['keyword'] = urlencode($params['keyword']);
+        } else {
+        	unset($params['keyword']);
+        }
+        if(isset($search_values['genreid'])) {
+        	$params['booksGenreId'] = urlencode($search_values['genreid']);
+        } else {
+        	$params['booksGenreId'] = urlencode("001001");
+        }
         if(isset($search_values['isbn'])) {
-        	$params['isbnjan'] = urlencode($search_values['isbn']); //ISBN(japan)
         	$params['isbnjan'] = str_replace("-", "", $params['isbnjan']);
+        	$params['isbnjan'] = urlencode($search_values['isbn']); //ISBN(japan)
+        }
+        if(isset($search_values['page'])){
+        	$params['page'] = $search_values['page'];
+        }
+        if(isset($search_values['sort'])){
+        	$params['sort'] = urlencode($search_values['sort']);
         }
         $params['carrier'] = ($env=='PC') ? "0" : "1";
-        $params['title'] = urlencode($this->_get_str_like_first());
-        $params['sort'] = urlencode("reviewCount");
         $params['size'] = 9; //comic
-  
+
         ksort($params);
         
 		//[3]パラメタをクエリ文字列に変換
@@ -66,7 +81,13 @@ class RakutenBookSearch extends AppModel {
 		}
 
         $url = $baseurl.$query;
+$this->log($url, LOG_DEBUG);
         $data = $HttpSocket->get($url);
+
+		$chk_data = json_decode($data, true);
+		if( array_key_exists("error", $chk_data) ){
+			return false;
+		}
 
         return $data;
 	
@@ -128,25 +149,45 @@ class RakutenBookSearch extends AppModel {
 	}
 	
 	/**
-	 * ジャンルIDの妥当性をチェックする
-	 *  [1] ジャンルIDが６桁未満はNG（書籍以外の可能性がある）
-	 *  [2] ジャンルIDが６桁の場合「001001＝ブック／漫画（コミック）」以外はエラー
+	 * 楽天API検索条件の妥当性をチェックする
 	 *  
 	 */
-	public function chk_genre_id($genre_id) {
+	public function chk_params($params) {
 		
-		if( empty($genre_id) ){
-			return false;
+		$result = array(
+			'flag' => true,
+			'msg' => ""
+		);
+		
+		// params['genre_id']
+		if( empty($params['genre_id']) ){
+			//$result['msg'] = "ジャンルIDは必須です";
 		} else {
-			if( strlen($genre_id) < 6 ){
-				return false;
+			if( strlen($params['genre_id']) < 6 ){
+				$result['msg'] = "ジャンルIDが不正な値です";
 			} else {
-				if( strlen($genre_id)==6 && $genre_id!='001001' ){
-					return false;
+				if( strlen($params['genre_id'])==6 && $params['genre_id']!='001001' ){
+					$result['msg'] = "書籍以外のジャンルIDが指定されています";
 				}
 			}
 		}
-		return true;
+		
+		//all empty flag
+		$all_emp = true;
+		foreach($params as $v){
+			if($v!=""){
+				$all_emp = false;
+				break;
+			}
+		}
+		if($all_emp){
+			$result['msg'] = "一つ以上の条件を入力してください";
+		}
+		
+		if( $result['msg'] != "" ){
+			$result['flag'] = false;
+		}
+		return $result;
 	}
 
 }

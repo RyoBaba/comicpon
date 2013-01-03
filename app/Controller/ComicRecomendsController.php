@@ -8,8 +8,9 @@ App::uses('AppController', 'Controller');
  */
 class ComicRecomendsController extends AppController {
 
-    var $uses = array('ComicRecomends');
-    var $components = array('Common');
+    public $uses = array('ComicRecomends');
+    public $components = array('Common', 'Session');
+	public $helpers = array('Cp');
 
 	function __construct($request = null, $response = null) {
 		parent::__construct($request, $response);
@@ -21,7 +22,14 @@ class ComicRecomendsController extends AppController {
     }
 
 /**
- * public method 書籍検索条件入力
+ * public method 書籍検索メニュー
+ */
+	public function index(){
+	
+	}
+
+/**
+ * public method 書籍ISBNダイレクト検索条件入力
  */
 	public function search() {
 	}
@@ -46,7 +54,8 @@ class ComicRecomendsController extends AppController {
  * ジャンル検索
  */
 	public function genre(){
-		$this->ComicRecomends->getGenre();
+		$genre_data = $this->ComicRecomends->getGenre("001001");
+		$this->set("genre_data", $genre_data);
 	}
 
 /**
@@ -58,8 +67,9 @@ class ComicRecomendsController extends AppController {
 			'current' => array(),
 			'children' => array()
 		);
+		$params = array('genre_id'=>$genre_id);
 		$RakutenBookSearch = ClassRegistry::init('RakutenBookSearch');
-		if( FALSE === $RakutenBookSearch->chk_genre_id($genre_id) ){
+		if( FALSE === $RakutenBookSearch->chk_params($params) ){
 			$this->Session->setFlash(__('ジャンル指定が正しくありません'));
 		} else {
 			$genre_data = $this->ComicRecomends->getGenre($genre_id);
@@ -69,17 +79,57 @@ class ComicRecomendsController extends AppController {
 	}
 
 /**
- * ジャンルIDから該当する書籍情報のリストを取得する
+ * 書籍検索入力（楽天ブックス由来）
  */
-	public function book_list_by_genre( $genre_id ) {
+	public function book_search() {
+		
+	}
+/**
+ * 書籍検索結果（楽天ブックス由来）
+ */
+	public function book_list () {
+
 		$item_datas = array();
 		$RakutenBookSearch = ClassRegistry::init('RakutenBookSearch');
-		if( FALSE === $RakutenBookSearch->chk_genre_id($genre_id) ){
-			$this->Session->setFlash(__('ジャンル指定が正しくありません'));
+		
+		//パラメタ取得
+		$params = array();
+		//ページチェンジ／ソートチェンジの場合、セッションから条件回復
+		$page = $this->Common->getParam('page');
+		$sort = $this->Common->getParam('srt');
+		if( $page != "" ){
+			$params = $this->Session->read('BookSearch');
+			$params['page'] = $page; unset($page);			
+		} else if( $sort != "" ) {
+			$params = $this->Session->read('BookSearch');
+			$params['sort'] = $sort;
 		} else {
-			$item_datas_json = $this->ComicRecomends->getBookListByGenreId($genre_id);
-			$item_datas = json_decode($item_datas_json, true);
+			$params['keyword'] = $this->Common->getParam('keyword');
+			$params['isbn'] = $this->Common->getParam('isbn');
+//			$this->Session->write('BookSearch', $params);
 		}
+		$this->Session->write('BookSearch', $params);
+		//空の条件はAPIに渡すとエラーになるため破棄しておく
+		foreach( $params as $key => $v ){
+			if($v==""){
+				unset($params[$key]);
+			}
+		}
+
+		//パラメタ検査
+		$result = $RakutenBookSearch->chk_params($params);
+		if( FALSE === $result['flag'] ){
+			$this->Session->setFlash(__( $result['msg'] ));
+			$this->redirect("book_search");
+		} else {
+			if( FALSE === $item_datas_json = $this->ComicRecomends->getBookList($params) ){
+				$this->Session->setFlash(__( "書籍情報を正常に取得できませんでした。" ));
+				$this->redirect("book_search");
+			} else {
+				$item_datas = json_decode($item_datas_json, true);
+			}
+		}
+		$this->set("item_datas_json", $item_datas_json);
 		$this->set("item_datas", $item_datas);
 	}
 

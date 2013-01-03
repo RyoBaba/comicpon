@@ -22,6 +22,7 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
     ?>
 </head>
 <body>
+	<?php echo $this->element('ComicRecomends_head_menu'); ?>
     <div id="container">
         <div id="content">
 

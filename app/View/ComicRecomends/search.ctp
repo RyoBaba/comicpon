@@ -1,4 +1,7 @@
 <?php
+	/**
+	 * ISBNコード書籍ダイレクト検索
+	 */
 	$result_action = Router::url(array('controller'=>'ComicRecomends', 'action'=>'result'));
 ?>
 

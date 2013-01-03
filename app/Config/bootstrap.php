@@ -1,6 +1,7 @@
 <?php
 
 require_once('const.php');
+App::import("Vendors", "cp_common");
 /**
  * This file is loaded automatically by the app/webroot/index.php file after core.php
  *

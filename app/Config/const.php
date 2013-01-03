@@ -9,4 +9,6 @@ require_once('amazon_config.php');
 //Resources path
 require_once('image_paths.php');
 
+//configure
+Configure::load('configure');
 ?>
