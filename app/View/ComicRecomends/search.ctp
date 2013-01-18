@@ -5,12 +5,12 @@
 	$result_action = Router::url(array('controller'=>'ComicRecomends', 'action'=>'result'));
 ?>
 
-<h2>マンガレコメンダー</h2>
+<h2>ISBNコード検索</h2>
 <div class="description">
 	<h3>使い方</h3>
 	<ul>
-		<ol>好きなマンガのISBNコードを入力！</ol>
-		<ol>「オススメマンガを探す」ボタンを押す！</ol>
+		<ol>好きな本のISBNコードを入力！</ol>
+		<ol>「オススメ本を探す」ボタンを押す！</ol>
 	</ul>
 	<br>
 	<p>たったこれだけです。<br>

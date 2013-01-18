@@ -31,12 +31,12 @@ class ComicRecomends extends AppModel {
 		$params['conditions'] = $conditions;
 		
 		$data = $CptComic->find('all', $params);
-		
+
 		//[2]ISBN検索の時のみ、検索結果が０件だったとき、楽天APIからデータ取得
 		if( $IdType=="ISBN" && count($data) == 0 ){
 			$RakutenBookSearch = ClassRegistry::init('RakutenBookSearch');
 			$params = array(
-				'isbn' => $ItemId
+				'isbnjan' => $ItemId
 			);
 			if( FALSE !== $rakuApiData = $RakutenBookSearch->getItem($params)){
 				//JSONデータをデコード（PHP stdObj形式のオブジェクトに変換される）
@@ -108,10 +108,26 @@ class ComicRecomends extends AppModel {
 	 */
 	public function getGenre($genre_id='001'){
 		$RakutenBookSearch = ClassRegistry::init('RakutenBookSearch');
-		//$RakutenBookSearch->getGenreData("001001001"); //少年
-		//$RakutenBookSearch->getGenreData("001001002"); //少女
-		//$RakutenBookSearch->getGenreData("001001003"); //青年
+		
+		//ジャンルＩＤ形式検索
+		$genre_chk = true;
+		$genre_chk = $RakutenBookSearch->chkGenreId($genre_id);
+		if( $genre_chk === FALSE ){
+			return false;  //パラメタ不正
+		} else if( $genre_chk != $RakutenBookSearch->genre_chk_stats['has_child'] ) {
+			return $genre_chk;
+		}
+		
 		$genre_data = $RakutenBookSearch->getGenreData($genre_id); //青年
+		
+		//エラーの場合"no_child"を返しておく
+		if(!array_key_exists('error', $genre_data) 
+			&& isset($genre_data['children']) 
+			&& count($genre_data['children']) == 0 )
+		{
+			return $RakutenBookSearch->genre_chk_stats['no_child'];
+		}
+		
 		return $genre_data;
 	}
 	
