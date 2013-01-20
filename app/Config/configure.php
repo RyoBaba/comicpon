@@ -12,4 +12,7 @@ $config['Raku']['sort'] = array(
 	'reviewAverage'=>'評判良',
 );
 
+//WikipediaのルートURL
+$config['wikiRootUrl'] = "http://ja.wikipedia.org/";
+
 ?>

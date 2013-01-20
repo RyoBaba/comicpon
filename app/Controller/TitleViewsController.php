@@ -2,11 +2,11 @@
 App::uses('AppController', 'Controller');
 //App::uses('CptComic', 'Model');
 /**
- * ComicRecomends Controller
+ * TitleViews Controller
  *
  * @property CptComic $CptComic
  */
-class SampleDatasController extends AppController {
+class TitleViewsController extends AppController {
 
     public $uses = array('SampleDatas');
     public $components = array('Common', 'Session');
