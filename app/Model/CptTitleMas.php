@@ -38,5 +38,21 @@ class CptTitleMas extends AppModel {
 		
 	}
 
+/**
+ * 同一タイトル存在チェック
+ */
+	public function isExistsSameTitle($title) {
+		$conditions = array('title'=>$title);
+		$params = array('conditions'=>$conditions);
+		$rec = $this->find('all', $params);
+		
+		if( count($rec) > 0 ){
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+
 
 }

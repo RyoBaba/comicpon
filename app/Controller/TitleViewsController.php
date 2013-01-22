@@ -8,7 +8,7 @@ App::uses('AppController', 'Controller');
  */
 class TitleViewsController extends AppController {
 
-    public $uses = array('SampleDatas');
+    public $uses = array();
     public $components = array('Common', 'Session');
 	public $helpers = array('Cp');
 
@@ -26,32 +26,24 @@ class TitleViewsController extends AppController {
 	 */
 	public function index ($vowelcode) {
 		
-		$wikidatas = $this->SampleDatas->getWikiDatas($vowelcode);
+		//$wikidatas = $this->SampleDatas->getWikiDatas($vowelcode);
 		
-		$this->set('wikidatas', $wikidatas);
+		//$this->set('wikidatas', $wikidatas);
 		
 	}
 	
-	public function save_title () {
-
-		if( false === ini_set('max_input_vars', '12000') ){
-			$this->log('ini_set failed!! ', LOG_DEBUG);
-		}
+	public function search () {
 		
-		$datas = $this->_getSaveParam();
-		$rtn = $this->SampleDatas->saveTitleMas($datas);
+		$params = $this->_get_search_params();
 		
 	}
-	//(SUB)
-	private function _getSaveParam() {
+	//(SUB)タイトル検索パラメタ取得
+	private function _get_search_params(){
 		
-		$datas = array();
-		$datas['title'] = $this->Common->getParam('title');
-		$datas['description'] = $this->Common->getParam('description');
-		$datas['vowel'] = $this->Common->getParam('vowel');
-		$datas['wikiurl'] = $this->Common->getParam('href');
-
-		return $datas;
+		$params = array();
+		
+		//ページ遷移／ソート順変更ならセッションから前の条件回復
+		//$params['vowel_code']
 		
 	}
 

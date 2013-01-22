@@ -36,8 +36,7 @@ SCRIPT;
 <h2>登録タイトル一覧</h2>
 
 <div id='vowelList'>
-	<h3>「あ」行のタイトル一覧</h3>
-	<ul>
-		
-	</ul>
+	<?php
+		pr( Configure::read('Hiragana') );
+	?>
 </div>

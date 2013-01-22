@@ -41,6 +41,8 @@ class SampleDatasController extends AppController {
 		$datas = $this->_getSaveParam();
 		$rtn = $this->SampleDatas->saveTitleMas($datas);
 		
+		$this->set('rtn', $rtn);
+		
 	}
 	//(SUB)
 	private function _getSaveParam() {
