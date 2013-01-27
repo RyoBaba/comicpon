@@ -24,7 +24,7 @@ class TitleViewsController extends AppController {
 	/**
 	 * データ解析
 	 */
-	public function index ($vowelcode) {
+	public function index () {
 		
 		//$wikidatas = $this->SampleDatas->getWikiDatas($vowelcode);
 		

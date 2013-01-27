@@ -54,5 +54,22 @@ class CptTitleMas extends AppModel {
 		
 	}
 
+/**
+ * 指定されたタイトルID以外のレコードから、ランダムに指定された件数(デフォルト10件)を取得する
+ */
+	public function getTitleRecRand($title_id, $rec_cnt=10){
+		
+		$conditions = array();
+		$conditions['NOT'] = $title_id
+		$params = array(
+			'conditions' => $conditions,
+			'order' => 'rand()',
+			'limit' => $rec_cnt
+		);
+		
+		$title_rec = $this->find('all', $params);
+		
+		return $title_rec;
+	}
 
 }
