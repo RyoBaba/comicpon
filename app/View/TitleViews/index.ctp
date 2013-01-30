@@ -67,15 +67,17 @@ SCRIPT;
 	<?php
 		//pr( Configure::read('Hiragana') );
 		$vowel_list = Configure::read('Hiragana');
+		$i = 0;
 		foreach($vowel_list as $cat_name => $list){
 			echo "<div id='Vowel{$i}' class='vowel_list'>";
 			echo "<a href='{$save_title_action}?vcat={$cat_name}' class='cat'>" . $cat_name 
 				. "のタイトルを探す</a>｜";
 			foreach($list as $idx => $vowel){
-				echo "<a href='{$save_title_action}?vowel={$i}' class='vowel'>" . $vowel 
+				echo "<a href='{$save_title_action}?vowel={$vowel}' class='vowel'>" . $vowel 
 					. "</a>｜";
 			}
 			echo "</div>";
+			$i++;
 		}
 	?>
 </div>
