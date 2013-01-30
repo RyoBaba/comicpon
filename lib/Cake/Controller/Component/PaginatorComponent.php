@@ -109,6 +109,7 @@ class PaginatorComponent extends Component {
  * @throws MissingModelException
  */
 	public function paginate($object = null, $scope = array(), $whitelist = array()) {
+
 		if (is_array($object)) {
 			$whitelist = $scope;
 			$scope = $object;

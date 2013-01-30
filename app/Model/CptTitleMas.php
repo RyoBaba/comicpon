@@ -60,7 +60,7 @@ class CptTitleMas extends AppModel {
 	public function getTitleRecRand($title_id, $rec_cnt=10){
 		
 		$conditions = array();
-		$conditions['NOT'] = $title_id
+		$conditions['NOT'] = $title_id;
 		$params = array(
 			'conditions' => $conditions,
 			'order' => 'rand()',

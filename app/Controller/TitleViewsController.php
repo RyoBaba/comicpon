@@ -8,9 +8,15 @@ App::uses('AppController', 'Controller');
  */
 class TitleViewsController extends AppController {
 
-    public $uses = array();
-    public $components = array('Common', 'Session');
+    public $uses = array('CptTitleMas');
+    public $components = array('Common', 'Session', 'Paginator');
 	public $helpers = array('Cp');
+    public $paginate = array (
+        'CptTitleMas'=>array(
+        	'limit' => 10,
+        	'sort' => 'id',
+        ),
+    );
 
 	function __construct($request = null, $response = null) {
 		parent::__construct($request, $response);
@@ -36,14 +42,25 @@ class TitleViewsController extends AppController {
 		
 		$params = $this->_get_search_params();
 		
+		$conditions = array();
+		if( $params['vowel'] != '' ){
+			$conditions['vowel'] = $params['vowel'];
+		}
+		
+		$title_data = $this->Paginator->paginate('CptTitleMas', $conditions);
+		$this->set('title_data', $title_data);
+		
 	}
 	//(SUB)タイトル検索パラメタ取得
 	private function _get_search_params(){
 		
 		$params = array();
 		
+		$params['vowel'] = $this->Common->getParam('vowel');
 		//ページ遷移／ソート順変更ならセッションから前の条件回復
 		//$params['vowel_code']
+		
+		return $params;
 		
 	}
 
