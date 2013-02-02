@@ -75,4 +75,68 @@ class SampleDatas extends AppModel {
 		return $rtn;
 	}
 	
+	/**
+	 * タイトルマスタ上に保存されているWikipediaのurlから
+	 * HTMLデータを取得した後、正規化し、タイトルごとに保存してしまう
+	 */
+	public function getTitleIds() {
+		
+		$CptTitleMas = ClassRegistry::init('CptTitleMas');
+		
+		$ids = array();
+		
+		//[1]WikipediaURLを全て取得
+		$vowel_list = Configure::read('Hiragana');
+		foreach($vowel_list as $vowels){
+			foreach($vowels as $vowel){
+				$conditions = array('vowel'=>$vowel);
+				$fields = array('id');
+				$order = array('id'=>'asc');
+				$recs = $CptTitleMas->find('all', array(
+					'conditions' => $conditions,
+					'fields' => $fields,
+					'order' => $order
+				));
+				foreach($recs as $rec){
+					$ids[] = $rec['CptTitleMas']['id'];
+				}
+			}
+		}
+		
+		/*
+		//[2]各URLにリクエストし、HTMLテキストデータを取得
+		foreach($urls as $url){
+			$domDocument = new DOMDocument();
+			$html = file_get_contents($url);
+			$html = mb_convert_encoding($html, 'HTML-ENTITIES', 'ASCII, JIS, UTF-8, EUC-JP, SJIS');
+			$domDocument->loadHTML($html);
+			$xmlString = $domDocument->saveXml();
+			$xmlObj = simplexml_load_string($xmlString);
+			$urls[] = $xmlObj->body;
+			break;
+		}
+		*/		
+		
+		
+		return $ids;
+	}
+	
+	/*
+	 * 指定されたURLのHTMLデータを取得する
+	 */
+	public function getHtmlData($id){
+		
+		$CptTitleMas = ClassRegistry::init('CptTitleMas');
+		$title_rec = $CptTitleMas->findById($id);
+		$url = $title_rec['CptTitleMas']['wikiurl'];
+		
+		App::uses('HttpSocket', 'Network/Http');
+		$HttpSocket = new HttpSocket();
+		$data = $HttpSocket->get($url);
+		return $data;
+
+	}
+	
+	
+	
 }

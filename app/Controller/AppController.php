@@ -33,11 +33,22 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
     
+    //public $components = array('RequestHandler');
+    //public $helpers = array('Js');
+    
     function beforeFilter () {
         
         $this->layout = "common";
         
         
+    }
+    
+    /*
+     * layoutを使わず、渡されたデータのみrenderする
+     */
+    function _renderPlain($data){
+		$this->set('contents', $data);
+		$this->render('/Ajax/plain');    	
     }
     
 }

@@ -9,16 +9,22 @@ App::uses('AppController', 'Controller');
 class SampleDatasController extends AppController {
 
     public $uses = array('SampleDatas');
-    public $components = array('Common', 'Session');
-	public $helpers = array('Cp');
-
+    public $components = array('Common', 'Session', 'RequestHandler');
+	public $helpers = array('Cp', 'Js');
+	public $aj_actions = array('aj_get_wiki_html');
+	
 	function __construct($request = null, $response = null) {
 		parent::__construct($request, $response);
 	}
 
 	function beforeFilter() {
 		parent::beforeFilter();
-		
+		if( $this->RequestHandler->isAjax() && in_array($this->action, $this->aj_actions) ){
+			Configure::write('debug', 0);
+			$this->layout = false;
+			$this->RequestHandler->setContent('json');
+			$this->RequestHandler->respondAs('application/json; charset=UTF-8');
+		}
 	}
 	
 	/**
@@ -56,5 +62,26 @@ class SampleDatasController extends AppController {
 		return $datas;
 		
 	}
-
+	
+	/**
+	 * タイトル詳細情報取得＆保存
+	 */
+	public function get_html_and_save_data(){
+		$ids = $this->SampleDatas->getTitleIds();
+		$ids = json_encode($ids);
+		$this->set('ids', $ids);
+	}
+	
+	/**
+	 * (AjaxOnly) 指定されたURLのHTMLデータを取得し返す
+	 */
+	public function aj_get_wiki_html($id){
+		
+		//[1]HTMLデータを取得
+		$data = $this->SampleDatas->getHtmlData($id);
+		//$this->_renderJson($data, array('header'=>false, 'debugOff'=>true));
+		
+		$this->_renderPlain($data);
+		
+	}
 }
