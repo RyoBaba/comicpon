@@ -11,7 +11,7 @@ class SampleDatasController extends AppController {
     public $uses = array('SampleDatas');
     public $components = array('Common', 'Session', 'RequestHandler');
 	public $helpers = array('Cp', 'Js');
-	public $aj_actions = array('aj_get_wiki_html');
+	public $aj_actions = array('aj_get_wiki_html','aj_save_wiki_html');
 	
 	function __construct($request = null, $response = null) {
 		parent::__construct($request, $response);
@@ -82,6 +82,26 @@ class SampleDatasController extends AppController {
 		//$this->_renderJson($data, array('header'=>false, 'debugOff'=>true));
 		
 		$this->_renderPlain($data);
+		
+	}
+	/**
+	 * (AjaxOnly) 指定されたタイトルの詳細情報をテキストを保存する
+	 *            ※既存のレコードが存在すれば、上書き保存する
+	 */
+	public function aj_save_wiki_html(){
+		
+		
+		
+		//[1]HTMLデータを取得
+		$data = array(
+			'title_mas_id' => $this->Common->getParam('title_mas_id'),
+			'data_text' => $this->Common->getParam('data_text')
+		);
+	
+		$this->SampleDatas->save_title_desc_text($data);
+		
+		$rtn = array('flag'=>true);
+		$this->_renderJson($rtn);
 		
 	}
 }

@@ -34,7 +34,7 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller {
     
     //public $components = array('RequestHandler');
-    //public $helpers = array('Js');
+    public $helpers = array('Js');
     
     function beforeFilter () {
         
@@ -51,4 +51,11 @@ class AppController extends Controller {
 		$this->render('/Ajax/plain');    	
     }
     
+    /*
+     * layoutを使わず、渡されたデータをJSONオブジェクト文字列に変換しrenderする
+     */
+    function _renderJson($data){
+		$this->set('contents', $data);
+		$this->render('/Ajax/json');    	
+    }
 }

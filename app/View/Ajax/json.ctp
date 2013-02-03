@@ -1,2 +1,2 @@
 <?php
-echo $js->object($contents);
+echo $this->Js->object($contents);

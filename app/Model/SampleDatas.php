@@ -137,6 +137,23 @@ class SampleDatas extends AppModel {
 
 	}
 	
-	
+	/**
+	 * タイトル詳細情報テキストを保存
+	 */
+	public function save_title_desc_text($data) {
+		$CptTitleDescText = ClassRegistry::init('CptTitleDescText');
+		$rec = array();
+		
+		$rec = $CptTitleDescText->find('all', array('conditions'=>array('title_mas_id'=>$data['title_mas_id'])));
+		if(count($rec)==0){
+			$rec[0] = array('CptTitleDescText'=>array());
+			$rec[0]['CptTitleDescText']['title_mas_id'] = $data['title_mas_id'];
+		}
+		$rec[0]['CptTitleDescText']['data_text'] = $data['data_text'];
+		
+		$CptTitleDescText->create();
+		return $CptTitleDescText->save($rec[0]['CptTitleDescText']);
+		
+	}
 	
 }
