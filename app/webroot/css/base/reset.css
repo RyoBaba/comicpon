@@ -1,0 +1,158 @@
+/* 
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com 
+Twitter: @rich_clark
+*/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+}
+
+body {
+	font:14px/1""ヒラギノ角ゴ Pro W3", Hiragino Kaku Gothic Pro","メイリオ","Meiryo",sans-serif;
+	line-height:1.5;
+}
+
+html{
+    -webkit-text-size-adjust: none;/*デバイスの向きを変えたときも文字サイズを拡大しないように指定。*/
+}
+
+
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section { 
+	display:block;
+}
+
+img {border: 0; vertical-align: bottom;}
+
+h1,h2,h3,h4,h5,h6 {clear: both; font-size: 100%; font-weight: normal;}
+
+ul,dl,ol {text-indent: 0; list-style: none;}
+
+address,caption,cite,code,dfn,em,strong,th,var {font-style: normal; font-weight: normal;}
+
+sup {vertical-align: text-top;}
+sub {vertical-align: text-bottom;}
+
+input,textarea,select {font-family: inherit; font-size: inherit; font-weight:inherit;}
+
+blockquote, q {
+    quotes:none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content:'';
+    content:none;
+}
+
+a {
+    margin:0;
+    padding:0;
+    font-size:100%;
+    vertical-align:baseline;
+    background:transparent;
+	-webkit-tap-highlight-color:rgba(00,33,99,0.3);/*タップ時の背景色*/
+}
+
+/* change colours to suit your needs */
+ins {
+    background-color:#ff9;
+    color:#000;
+    text-decoration:none;
+}
+
+/* change colours to suit your needs */
+mark {
+    background-color:#ff9;
+    color:#000; 
+    font-style:italic;
+    font-weight:bold;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+abbr[title], dfn[title] {
+    border-bottom:1px dotted;
+    cursor:help;
+}
+
+
+table {border-collapse: collapse; border-spacing: 0; font-size: inherit;}
+th,td {text-align: left; vertical-align: top;}
+caption {text-align: left;}
+
+/*
+pre,code,kbd,samp,tt {font-family: monospace;}
+*/
+input,select,textarea {font-size: 100%;}
+
+/* change border colour to suit your needs */
+hr {
+    display:block;
+    height:1px;
+    border:0;   
+    border-top:1px solid #cccccc;
+    margin:1em 0;
+    padding:0;
+}
+
+input, select {
+    vertical-align:middle;
+}
+
+button{
+	cursor:pointer;
+}
+
+
+/*
+textarea:disabled,
+input:not([type]):disabled,
+input[type="color"]:disabled,
+input[type="date"]:disabled,
+input[type="datetime"]:disabled,
+input[type="datetime-local"]:disabled,
+input[type="month"]:disabled,
+input[type="tel"]:disabled,
+input[type="time"]:disabled,
+input[type="url"]:disabled,
+input[type="week"]:disabled,
+input[type="email"]:disabled,
+input[type="search"]:disabled,
+input[type="password"]:disabled,
+input[type="text"]:disabled,
+input[type="button"]:disabled,
+input[type="number"]:disabled,
+input[type="checkbox"]:disabled{
+		opacity:0.5;
+}
+*/
+textarea:disabled,
+input:disabled{
+	opacity:0.5;
+}
+
+
+

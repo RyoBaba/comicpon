@@ -1,0 +1,114 @@
+@charset "utf-8";
+/* =======================================
+
+	mock(search?) CSS		検索コンテンツ
+
+ -----------------------------------------
+
+
+
+ -----------------------------------------
+
+ =======================================*/
+
+
+
+#search_wrap {
+	margin-bottom: 5px;
+}
+
+#search_wrap .search_box {
+	text-align: center;
+}
+
+#search_wrap .search_text {
+    display: inline-block;
+	width: 70%;
+	height: 26px;
+}
+
+#search_wrap .search_btn {
+    display: inline-block;
+	width: 20%;
+	padding: 3px;
+}
+
+.comic_list {
+}
+
+.comic_list ul {
+	margin: 0;
+	padding: 10px 0 0 0;
+	text-align: center;
+}
+
+.comic_list ul .transition {
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.8s;
+	width:80px;
+	height:126px;
+	background-color:#ccc;
+	overflow: hidden;
+	margin: 5px 9px 18px 7px;
+	display: inline-block;
+	position: relative;
+	outline: solid 5px #fff;
+	box-shadow: 7px 7px 7px rgba(0,0,0,0.3);
+	float:left;
+}
+
+.comic_list ul .transition2 {
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.8s;
+	width:252px;
+	height:245px;
+	background-color:rgba(255,255,255,0.4);
+	overflow: hidden;
+	padding: 10px;
+	margin: 5px 10px 10px 5px;
+	display: inline-block;
+	outline:0;
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+	border: 1px solid #ccc;
+}
+
+.comic_list ul li .comic_shousai {
+	display: inline-block;
+	position: absolute;
+	top: 10px;
+	left: 100px;
+	margin-left: 28%;
+}
+
+.comic_list ul li .comic_shousai a {
+	text-decoration: none;
+}
+
+.comic_list .book_img {
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.9s;
+	display: inline-block;
+	width:80px;
+	height:126px;
+	outline: solid 5px #fff;
+	float:left;
+}
+
+.comic_list .book_img2 {
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.9s;
+	display: inline-block;
+	width:150px;
+	height:240px;
+	box-shadow: 7px 7px 7px rgba(0,0,0,0.3);
+}
+
+h6 {
+	display: inline-block;
+	margin: 0;
+}
+
+span {
+	display: inline-block;
+	width: 100%;
+}

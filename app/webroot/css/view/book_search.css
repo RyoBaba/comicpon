@@ -1,0 +1,48 @@
+@charset "utf-8";
+/* =======================================
+
+	search CSS		ISBN検索コンテンツ
+
+ -----------------------------------------
+
+
+
+ -----------------------------------------
+
+ =======================================*/
+
+
+
+#search_wrap {
+	margin-bottom: 5px;
+}
+
+#search_wrap .search_in li {
+	margin-left: 5px;
+}
+
+#search_wrap .search_in li:nth-child(odd) {
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+#search_wrap .search_in li:nth-child(even) {
+	margin-bottom: 10px;
+}
+
+#search_wrap .search_in li small {
+	font-size: 0.8em;
+}
+
+#search_wrap .search_text {
+	display: inline;
+	width: 95%;
+	height: 22px;
+}
+
+#search_wrap .search_btn {
+	display: inline;
+	margin-left: 5px;
+	width: 40%;
+	padding: 3px;
+}

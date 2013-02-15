@@ -1,0 +1,70 @@
+@charset "utf-8";
+/* =======================================
+
+	search CSS		ISBN検索コンテンツ
+
+ -----------------------------------------
+
+
+
+ -----------------------------------------
+
+ =======================================*/
+
+
+
+#search_wrap {
+	margin-bottom: 5px;
+}
+
+#search_wrap .genre_list {
+	width: 100%;
+}
+
+#search_wrap hr {
+	display: block;
+	height: 0;
+	border: 0;
+	border-top: 1px solid #ccc;
+	margin: 0;
+	padding: 0;
+}
+
+#search_wrap .genre_list li {
+	text-align: center;
+	line-height: 2.8em;
+	width: 100%;
+}
+
+#search_wrap .genre_list li .genre_no {
+	font-weight: normal;
+	font-size: 0.8em;
+	width: 7%;
+	display: inline-block;
+	margin: 0;
+}
+
+#search_wrap .genre_list li .genre_name {
+	font-weight: bold;
+	font-size: 0.8em;
+	width: 50%;
+	display: inline-block;
+	text-align: left;
+	margin: 0;
+	line-height: 1.4em;
+	vertical-align: middle;
+}
+
+#search_wrap .genre_list li .genre_shousai {
+	font-weight: normal;
+	font-size: 0.7em;
+	display: inline-block;
+	width: 22%;
+	margin: 0;
+}
+
+#search_wrap .search_btn {
+	display: inline-block;
+	width: 20%;
+	padding: 1px;
+}

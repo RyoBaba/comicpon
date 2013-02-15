@@ -1,0 +1,79 @@
+@charset "utf-8";
+
+/* =======================================
+
+	Text Decorations CSS
+
+ -----------------------------------------
+	INDEX
+ -----------------------------------------
+	・Titles
+	・links
+	・other tags
+
+ =======================================*/
+
+
+
+
+
+/* Titles
+========================================== */
+
+#document h2 {
+}
+
+#document h3 {
+}
+
+#document h4 {
+}
+
+#document h5 {
+}
+
+#document h6 {
+}
+
+
+/* links
+========================================== */
+a {	
+	text-decoration:none;
+	color: rgba(0,61,76,1);
+	cursor:pointer;
+}
+a:hover {
+	color: rgba(0,61,76,1);
+}
+
+
+/* other tags
+========================================== */
+#document p, #document address, #document th, #document td {
+}
+
+#document li, #document dt, #document dd {
+}
+
+/* Inner Reset  */
+#document th p, #document th li, #document th dt, #document th dd,
+#document td p, #document td li, #document td dt, #document td dd,
+#document li p, #document li li, #document li dt, #document li dd,
+#document dt p, #document dt li, #document dt dt, #contents dt dd,
+#document dd p, #document dd li, #document dd dt, #document dd dd {
+	font-size: 100%;
+}
+
+#document strong {
+	font-weight: bold;
+}
+
+#document em {
+	font-style: italic;
+}
+
+label {
+    cursor:pointer;
+} 
+
