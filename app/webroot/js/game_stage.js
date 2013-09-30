@@ -20,69 +20,70 @@ var GameStage = (function(){
 	var PLAYER_MIN_COUNT = 2;
 	var PLAYER_MAX_COUNT = 10;
 
-	/*
-	 * Properties
-	 */
-	var game_id = null;				//ゲームID
-	var player_cnt = 0;		//プレーヤー人数
-	var players = new Array();	//プレーヤー配列
-	var deck = new Array();	//デッキ：デッキ枚数分の要素数を持つ配列（各要素は全てCardのインスタンスとする）
+	//return Object
+	return {
 
-	function initCard () {
-		this.deck = new Array();
-		//カード定義順にデッキにカードを配列する
-		for( var suit=0; suit<=4; suit++ ){
-			for( var _idx in CARDS[suit] ) {
-				this.deck.push( new Card(suit, CARDS[suit][_idx]) );
+		/*
+		 * Properties
+		 */
+		game_id : null,				//ゲームID
+		player_cnt : 0,		//プレーヤー人数
+		players_arr : new Array(),	//プレーヤー配列
+		deck : new Array(),	//デッキ：デッキ枚数分の要素数を持つ配列（各要素は全てCardのインスタンスとする）
+
+		/*
+		 * Methods
+		 */	
+		// 初期化（ゲームID, デッキ）
+		init : function() {
+			this.setGameId();
+			this.player_cnt = 2;	//初期値は２
+			this.initCard();
+			this.shuffleCard();
+		},
+		initCard : function () {
+			this.deck = new Array();
+			//カード定義順にデッキにカードを配列する
+			for( var suit=0; suit<=4; suit++ ){
+				for( var _idx in CARDS[suit] ) {
+					this.deck.push( new Card(suit, CARDS[suit][_idx]) );
+				}
 			}
-		}
-	};
+		},
 
-	//(SUB)カードシャッフル
-	function shuffleCard () {
-		for(i=0; i<=53; i++){
-			w = deck[i];
-			r = Math.floor(Math.random()*(13*4+2));
-			this.deck[i] = deck[r];
-			this.deck[r] = w;
-		}
-	};
-
-	/*
-	 * Methods
-	 */	
-	// 初期化（ゲームID, デッキ）
-	this.init = function() {
-		this.setGameId();
-		player_cnt = 2;	//初期値は２
-		initCard();
-		shuffleCard();
-	}
-	this.setGameId = function() { game_id = new Date().getTime(); };
-	this.getGameId = function() { return game_id; };
-	this.playerCnt = function(_cnt) { 
-		if(typeof _cnt != "undefined"){
-			player_cnt = _cnt; return player_cnt;
-		}
-		return player_cnt;
-	};
-	this.players = function(_players){
-		if(typeof _players == "undefined"){
-			return players;
-		} else {
-			players = new Array();
-			for(var i in _players){
-				players.push( new Player(game_id, _players[i].name, _players[i].url) );
+		//(SUB)カードシャッフル
+		shuffleCard :function () {
+			for(i=0; i<=53; i++){
+				w = this.deck[i];
+				r = Math.floor(Math.random()*(13*4+2));
+				this.deck[i] = this.deck[r];
+				this.deck[r] = w;
 			}
-		}
-	}
+		},
+		setGameId : function() { this.game_id = new Date().getTime(); },
+		getGameId : function() { return this.game_id; },
+		playerCnt : function(_cnt) { 
+			if(typeof _cnt != "undefined"){
+				this.player_cnt = _cnt; 
+			}
+			return this.player_cnt;
+		},
+		players : function(_players){
+			if(typeof _players == "undefined"){
+				this.players_arr = new Array();
+				for(var i in _players){
+					this.players_arr.push( new Player(this.game_id, _players[i].name, _players[i].url) );
+				}
+			}
+			return this.players_arr;
+		},
+		__DMY : null
 
 
-	//---- ゲーム中処理群 ------------------------
+		//---- ゲーム中処理群 ------------------------
 
-	//---- ゲーム終了処理群-----------------------
-
-	return this;
+		//---- ゲーム終了処理群-----------------------
+	};
 
 });
 
