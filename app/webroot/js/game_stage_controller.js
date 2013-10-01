@@ -60,16 +60,16 @@ var GameStageController = (function(){
 		setPlayerInfo : function() {
 			_players = new Array();
 			for(var i=1; i<=this.gameStage.playerCnt(); i++ ){
-
-console.log($('#playerName'+i).val());
-console.log($('#playerUrl'+i).val());
-
 				_players.push( {
 					name: $('#playerName'+i).val(),
 					url: $('#playerUrl'+i).val()
 				} );
 			}
+console.log(_players);
+			//GameStageにプレーヤー情報セット
 			this.gameStage.players(_players);
+			//GameStage上のプレーヤーにカードを配布し初期通信開始
+			this.gameStage.initGame();
 		},
 		__DMY: null
 	}
@@ -94,6 +94,7 @@ $(document).ready(function(){
 	});
 	$('#submitPlayerInfo').live('click', function(){
 		GameStageController.setPlayerInfo();
+
 	});
 
 
