@@ -26,7 +26,6 @@ var REQ_TYPE_START = 1, REQ_TYPE_TURN = 2, REQ_TYPE_END = 9;
 
 var GameStage = (function(){
 
-
 	//return Object
 	return {
 
@@ -78,6 +77,15 @@ var GameStage = (function(){
 			}
 			return this.player_cnt;
 		},
+		//playerIdを受け取り、プレイヤー配列のインデックス番号を返す
+		playerIdx : function( playerId ) {
+			for( var idx in this.players_arr ) {
+				if( this.players_arr[idx].id == playerId ) {
+					return idx;
+				}
+			}
+			return false;
+		},
 		players : function(_players){
 			if(typeof _players != "undefined"){
 				this.players_arr = new Array();
@@ -97,9 +105,18 @@ var GameStage = (function(){
 				_player_idx = ((_player_idx + 1) == this.player_cnt) ? 0 : _player_idx + 1;
 			}
 			//[2]各プレーヤーのAPIにカード情報をPOST送信
+console.dir(this.players_arr[0]);
+
 			for( var i in this.players_arr ){
-				this.initAjaxSend( this.players_arr[i] );
+				var rtn_data = this.initAjaxSend( this.players_arr[i] );
+				this.players_arr[i].turn1Url = rtn_data.turn1Url;
+				this.players_arr[i].turn2Url = rtn_data.turn2Url;
+				this.players_arr[i].endUrl = rtn_data.endUrl;
 			}
+
+console.dir(this.players_arr[0]);
+console.dir(this.players_arr[1]);
+
 			//[3]ゲーム開始待機状態へ
 		},
 		initAjaxSend : function( playerData ) {
@@ -108,19 +125,26 @@ var GameStage = (function(){
 				info : playerData,		//プレーヤーデータ
 				rule : new Array()		//特殊ルールフラグ
 			};
+			var rtn_data = new Array();
 			$.ajax({
-				url    : playerData.url,
-				type   : "POST",
-				data   : postData,
-				assync : false,
+				url      : playerData.url,
+				type     : "POST",
+				data     : postData,
+				dataType : "JSON",
+				async    : false,
 				success: function( data ){
-					console.log("success::init "+playerData.id);
+					rtn_data.turn1Url = data.info.turn1Url;
+					rtn_data.turn2Url = data.info.turn2Url;
+					rtn_data.endUrl = data.info.endUrl;
 				},
 				error  : function( e ) {
-					console.log("ERROR!!");
 				}
 			});
+
+			return rtn_data;
+
 		},
+
 		__DMY : null
 
 
@@ -148,9 +172,18 @@ var Card = function(suit, num, have) {
  * Player
  */
 var Player = function(id,name,url){
+	
+	//プレーヤー基本情報
 	this.id = id;
 	this.name = name;
+
+	//プレーヤー通信用情報
 	this.url = url;
+	this.turn1Url = null;
+	this.turn2Url = null;
+	this.endUrl = null;
+
+	//プレーヤーゲーム内状態情報
 	this.cards = new Array();
 	return this;
 }
