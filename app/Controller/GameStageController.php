@@ -10,7 +10,7 @@ class GameStageController extends AppController {
 
     public $uses = array('GameStage');
     public $components = array('Common', 'Session', 'RequestHandler');
-	public $helpers = array('Cp','Ajax');
+	public $helpers = array('Cp');
 	public $aj_actions = array('stub0','stub1', 'stub2', 'stub3');
 	
 
