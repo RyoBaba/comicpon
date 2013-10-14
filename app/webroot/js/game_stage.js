@@ -126,21 +126,36 @@ console.dir(this.players_arr[1]);
 				rule : new Array()		//特殊ルールフラグ
 			};
 			var rtn_data = new Array();
-			$.ajax({
-				url      : playerData.url,
-				type     : "POST",
-				data     : postData,
-				dataType : "JSON",
-				async    : false,
-				success: function( data ){
-					rtn_data.turn1Url = data.info.turn1Url;
-					rtn_data.turn2Url = data.info.turn2Url;
-					rtn_data.endUrl = data.info.endUrl;
-				},
-				error  : function( e ) {
-				}
-			});
-
+			(function(){
+				$.ajax({
+					url      : playerData.url,
+					type     : "POST",
+					data     : postData,
+					timeout  : 5000,
+					jsonpCallback: "callback",
+					dataType : "jsonp",
+					async    : false,
+					/*
+					success: function( data, playerData ){
+						var script = document.createElement('script');
+						script.src = 
+						rtn_data.turn1Url = data.info.turn1Url;
+						rtn_data.turn2Url = data.info.turn2Url;
+						rtn_data.endUrl = data.info.endUrl;
+					},
+					*/
+					error  : function( e ) {
+					}
+				})
+				.done(function(data){
+					if(data){
+						console.log('[Using jQuery.ajax function case] '+data);
+					}
+				})
+				.fail(function(jqXHR,textStatus,errorThrown){
+					console.log('['+textStatus+'] '+errorThrown);
+				});
+			})();
 			return rtn_data;
 
 		},

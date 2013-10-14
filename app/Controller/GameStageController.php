@@ -10,7 +10,7 @@ class GameStageController extends AppController {
 
     public $uses = array('GameStage');
     public $components = array('Common', 'Session', 'RequestHandler');
-	public $helpers = array('Cp');
+	public $helpers = array('Cp','Ajax');
 	public $aj_actions = array('stub0','stub1', 'stub2', 'stub3');
 	
 
@@ -21,9 +21,10 @@ class GameStageController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();
         //Ajax通信でJSONを返すタイプのアクションの場合の前処理
- 		if( $this->RequestHandler->isAjax() && in_array($this->action, $this->aj_actions) ){
+        // --> Ajax check remove 131014 bb
+ 		if( /* $this->RequestHandler->isAjax() && */ in_array($this->action, $this->aj_actions) ){
 			Configure::write('debug', 0);
-			$this->layout = false;
+			$this->layout = "ajax";
 			$this->RequestHandler->setContent('json');
 			$this->RequestHandler->respondAs('application/json; charset=UTF-8');
 		}       
